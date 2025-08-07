@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAMERYT Docs</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link onerror="this.onerror=null;this.href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined';" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
     <style>
@@ -921,7 +921,9 @@
         <div class="search-overlay-mobile">
             <div class="search-bar-mobile">
                 <div id="back">
-                    <span class="material-symbols-outlined">arrow_back</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align: middle;">
+                        <path d="M15.5 19L9 12L15.5 5" stroke="#712cca" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
                 <span class="material-symbols-outlined">search</span>
                 <input type="text" placeholder="Search for documents">
@@ -1148,7 +1150,7 @@
                         </div>
                         <div class="item" id="resize">
                             <span class="material-symbols-outlined">crop</span>
-                            <p>Resize</p>
+                            <p>Resize (new)</p>
                         </div>
                     </div>
                 </div>
@@ -1184,7 +1186,7 @@
                         <hr>
                         <div class="item" id="find-replace">
                             <span class="material-symbols-outlined">find_replace</span>
-                            <p>Find and replace (under construction)</p>
+                            <p>Find and replace (new) </p>
                         </div>
                     </div>
                 </div>
@@ -1224,7 +1226,7 @@
                         </div>
                         <div class="item" id="insert-link">
                             <span class="material-symbols-outlined">link</span>
-                            <p>Insert Link (Doesnt work try inserting link from toolbar)</p>
+                            <p>Insert Link  </p>
                         </div>
                         <div class="item" id="insert-table">
                             <span class="material-symbols-outlined">table_chart</span>
@@ -1236,11 +1238,11 @@
                         </div>
                         <div class="item" id="insert-quote">
                             <span class="material-symbols-outlined">format_quote</span>
-                            <p>Insert Quote (Doesnt work try inserting link from toolbar) </p>
+                            <p>Insert Quote </p>
                         </div>
                         <div class="item" id="insert-horizontal-rule">
                             <span class="material-symbols-outlined">horizontal_rule</span>
-                            <p>Insert Horizontal Rule (Doesnt work try inserting link from toolbar)</p>
+                            <p>Insert Horizontal Rule </p>
                         </div>
                         <div class="item" id="insert-dropdown">
                             <span class="material-symbols-outlined">arrow_drop_down</span>
@@ -1520,6 +1522,229 @@
         </div>
     </div>
     <script> 
+    /* --- FIND AND REPLACE FUNCTIONALITY --- */
+    document.querySelector('.dropdown-edit .item#find-replace').addEventListener('click', function () {
+        // Remove any existing modal
+        let frModal = document.getElementById('find-replace-modal');
+        if (frModal) frModal.remove();
+
+        frModal = document.createElement('div');
+        frModal.id = 'find-replace-modal';
+        frModal.style.position = 'fixed';
+        frModal.style.top = '0';
+        frModal.style.left = '0';
+        frModal.style.width = '100vw';
+        frModal.style.height = '100vh';
+        frModal.style.background = 'rgba(0,0,0,0.15)';
+        frModal.style.display = 'flex';
+        frModal.style.alignItems = 'center';
+        frModal.style.justifyContent = 'center';
+        frModal.style.zIndex = '4000';
+
+        const modalContent = document.createElement('div');
+        modalContent.style.background = '#fff';
+        modalContent.style.borderRadius = '18px';
+        modalContent.style.boxShadow = '0 8px 32px rgba(113,44,202,0.18)';
+        modalContent.style.padding = '28px 24px 20px 24px';
+        modalContent.style.display = 'flex';
+        modalContent.style.flexDirection = 'column';
+        modalContent.style.alignItems = 'center';
+        modalContent.style.position = 'relative';
+        modalContent.style.minWidth = '320px';
+
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'material-symbols-outlined';
+        closeBtn.textContent = 'close';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '12px';
+        closeBtn.style.right = '16px';
+        closeBtn.style.fontSize = '2em';
+        closeBtn.style.color = '#a259e6';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.addEventListener('click', () => frModal.style.display = 'none');
+
+        const label = document.createElement('label');
+        label.textContent = 'Find and Replace';
+        label.style.marginBottom = '18px';
+        label.style.fontWeight = '600';
+        label.style.color = '#712cca';
+        label.style.fontSize = '1.1em';
+
+        const findInput = document.createElement('input');
+        findInput.type = 'text';
+        findInput.placeholder = 'Find...';
+        findInput.style.marginBottom = '10px';
+        findInput.style.padding = '8px 12px';
+        findInput.style.borderRadius = '8px';
+        findInput.style.border = '1.5px solid #ece6f7';
+        findInput.style.fontSize = '1em';
+        findInput.style.width = '220px';
+
+        const replaceInput = document.createElement('input');
+        replaceInput.type = 'text';
+        replaceInput.placeholder = 'Replace with...';
+        replaceInput.style.marginBottom = '18px';
+        replaceInput.style.padding = '8px 12px';
+        replaceInput.style.borderRadius = '8px';
+        replaceInput.style.border = '1.5px solid #ece6f7';
+        replaceInput.style.fontSize = '1em';
+        replaceInput.style.width = '220px';
+
+        const btnRow = document.createElement('div');
+        btnRow.style.display = 'flex';
+        btnRow.style.gap = '10px';
+
+        const findBtn = document.createElement('button');
+        findBtn.textContent = 'Find';
+        findBtn.style.background = 'linear-gradient(90deg, #712cca 0%, #a259e6 100%)';
+        findBtn.style.color = '#fff';
+        findBtn.style.border = 'none';
+        findBtn.style.borderRadius = '18px';
+        findBtn.style.padding = '8px 18px';
+        findBtn.style.cursor = 'pointer';
+        findBtn.style.fontWeight = '600';
+        findBtn.style.fontSize = '1em';
+
+        const replaceBtn = document.createElement('button');
+        replaceBtn.textContent = 'Replace';
+        replaceBtn.style.background = '#ece6f7';
+        replaceBtn.style.color = '#712cca';
+        replaceBtn.style.border = 'none';
+        replaceBtn.style.borderRadius = '18px';
+        replaceBtn.style.padding = '8px 18px';
+        replaceBtn.style.cursor = 'pointer';
+        replaceBtn.style.fontWeight = '600';
+        replaceBtn.style.fontSize = '1em';
+
+        const replaceAllBtn = document.createElement('button');
+        replaceAllBtn.textContent = 'Replace All';
+        replaceAllBtn.style.background = 'linear-gradient(90deg, #a259e6 0%, #712cca 100%)';
+        replaceAllBtn.style.color = '#fff';
+        replaceAllBtn.style.border = 'none';
+        replaceAllBtn.style.borderRadius = '18px';
+        replaceAllBtn.style.padding = '8px 18px';
+        replaceAllBtn.style.cursor = 'pointer';
+        replaceAllBtn.style.fontWeight = '600';
+        replaceAllBtn.style.fontSize = '1em';
+
+        btnRow.appendChild(findBtn);
+        btnRow.appendChild(replaceBtn);
+        btnRow.appendChild(replaceAllBtn);
+
+        modalContent.appendChild(closeBtn);
+        modalContent.appendChild(label);
+        modalContent.appendChild(findInput);
+        modalContent.appendChild(replaceInput);
+        modalContent.appendChild(btnRow);
+        frModal.appendChild(modalContent);
+        document.body.appendChild(frModal);
+
+        frModal.style.display = 'flex';
+
+        // Highlight all matches
+        function highlightAll(term) {
+            const docCanvas = document.getElementById('docCanvas');
+            // Remove previous highlights
+            docCanvas.querySelectorAll('mark.__fr__').forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();
+            });
+            if (!term) return;
+            const walk = document.createTreeWalker(docCanvas, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+            while ((node = walk.nextNode())) {
+                if (node.nodeValue.match(regex)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = node.nodeValue.replace(regex, m => `<mark class="__fr__" style="background: #ffe066; color: #333;">${m}</mark>`);
+                    node.parentNode.replaceChild(span, node);
+                }
+            }
+        }
+
+        findBtn.addEventListener('click', function () {
+            highlightAll(findInput.value);
+        });
+
+        // Replace first match
+        replaceBtn.addEventListener('click', function () {
+            const docCanvas = document.getElementById('docCanvas');
+            const term = findInput.value;
+            const replacement = replaceInput.value;
+            if (!term) return;
+            let replaced = false;
+            // Find first match and replace
+            const walk = document.createTreeWalker(docCanvas, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+            while ((node = walk.nextNode())) {
+                if (node.nodeValue.match(regex)) {
+                    node.nodeValue = node.nodeValue.replace(regex, replacement);
+                    replaced = true;
+                    break;
+                }
+            }
+            if (replaced) {
+                showToast('Replaced!');
+                highlightAll(term);
+                docCanvas.dispatchEvent(new Event('input'));
+            } else {
+                showToast('No match found.');
+            }
+        });
+
+        // Replace all matches
+        replaceAllBtn.addEventListener('click', function () {
+            const docCanvas = document.getElementById('docCanvas');
+            const term = findInput.value;
+            const replacement = replaceInput.value;
+            if (!term) return;
+            let replaced = false;
+            // Replace in all text nodes
+            const walk = document.createTreeWalker(docCanvas, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+            while ((node = walk.nextNode())) {
+                if (node.nodeValue.match(regex)) {
+                    node.nodeValue = node.nodeValue.replace(regex, replacement);
+                    replaced = true;
+                }
+            }
+            if (replaced) {
+                showToast('Replaced all!');
+                highlightAll(term);
+                docCanvas.dispatchEvent(new Event('input'));
+            } else {
+                showToast('No match found.');
+            }
+        });
+
+        // Remove highlights on close
+        closeBtn.addEventListener('click', function () {
+            const docCanvas = document.getElementById('docCanvas');
+            docCanvas.querySelectorAll('mark.__fr__').forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();
+            });
+        });
+    });
+     
+
+    document.querySelector('.dropdown-insert .item#insert-link').addEventListener('click', function () {
+        document.getElementById('link').click();
+    });
+    document.querySelector('.dropdown-insert .item#insert-quote').addEventListener('click', function () {
+        document.getElementById('quote').click();
+    });
+    document.querySelector('.dropdown-insert .item#insert-horizontal-rule').addEventListener('click', function () {
+        document.getElementById('divider').click();
+    });
+
+
+
+
     document.getElementById('settings-btn').addEventListener('click', function () {
         document.getElementById('settingsModal').style.display = 'flex';
     });
@@ -3826,145 +4051,249 @@
         }
     });
 
-    /* --- RESIZE PAGE FUNCTIONALITY --- */
-    document.querySelector('.dropdown-file .item#resize').addEventListener('click', function () {
-        openResizeModal();
-    });
-    function openResizeModal() {
-        let resizeModal = document.getElementById('resize-modal');
-        if (!resizeModal) {
-            resizeModal = document.createElement('div');
-            resizeModal.id = 'resize-modal';
-            resizeModal.style.position = 'fixed';
-            resizeModal.style.top = '0';
-            resizeModal.style.left = '0';
-            resizeModal.style.width = '100vw';
-            resizeModal.style.height = '100vh';
-            resizeModal.style.background = 'rgba(0,0,0,0.15)';
-            resizeModal.style.display = 'flex';
-            resizeModal.style.alignItems = 'center';
-            resizeModal.style.justifyContent = 'center';
-            resizeModal.style.zIndex = '3000';
-
-            const modalContent = document.createElement('div');
-            modalContent.style.background = '#fff';
-            modalContent.style.borderRadius = '18px';
-            modalContent.style.boxShadow = '0 8px 32px rgba(113,44,202,0.18)';
-            modalContent.style.padding = '28px 24px 20px 24px';
-            modalContent.style.display = 'flex';
-            modalContent.style.flexDirection = 'column';
-            modalContent.style.alignItems = 'center';
-            modalContent.style.position = 'relative';
-            modalContent.style.minWidth = '320px';
-
-            const closeBtn = document.createElement('span');
-            closeBtn.className = 'material-symbols-outlined';
-            closeBtn.textContent = 'close';
-            closeBtn.style.position = 'absolute';
-            closeBtn.style.top = '12px';
-            closeBtn.style.right = '16px';
-            closeBtn.style.fontSize = '2em';
-            closeBtn.style.color = '#a259e6';
-            closeBtn.style.cursor = 'pointer';
-            closeBtn.addEventListener('click', () => resizeModal.style.display = 'none');
-
-            const label = document.createElement('label');
-            label.textContent = 'Resize Page';
-            label.style.marginBottom = '18px';
-            label.style.fontWeight = '600';
-            label.style.color = '#712cca';
-            label.style.fontSize = '1.1em';
-
-            const widthInput = document.createElement('input');
-            widthInput.type = 'number';
-            widthInput.placeholder = 'Width (px)';
-            widthInput.value = 794;
-            widthInput.min = 100;
-            widthInput.style.marginBottom = '8px';
-            widthInput.style.padding = '8px 12px';
-            widthInput.style.borderRadius = '8px';
-            widthInput.style.border = '1.5px solid #ece6f7';
-            widthInput.style.fontSize = '1em';
-            widthInput.style.width = '120px';
-
-            const heightInput = document.createElement('input');
-            heightInput.type = 'number';
-            heightInput.placeholder = 'Height (px)';
-            heightInput.value = 1123;
-            heightInput.min = 100;
-            heightInput.style.marginBottom = '8px';
-            heightInput.style.padding = '8px 12px';
-            heightInput.style.borderRadius = '8px';
-            heightInput.style.border = '1.5px solid #ece6f7';
-            heightInput.style.fontSize = '1em';
-            heightInput.style.width = '120px';
-
-            const fixedWidthSelect = document.createElement('select');
-            fixedWidthSelect.style.marginBottom = '18px';
-            fixedWidthSelect.style.padding = '8px 12px';
-            fixedWidthSelect.style.borderRadius = '8px';
-            fixedWidthSelect.style.border = '1.5px solid #ece6f7';
-            fixedWidthSelect.style.fontSize = '1em';
-            fixedWidthSelect.style.width = '180px';
-            fixedWidthSelect.innerHTML = `
-                <option value="">Custom</option>
-                <option value="A4">A4 (794x1123)</option>
-                <option value="Letter">Letter (816x1056)</option>
-                <option value="Good">Good width (max 100%)</option>
-            `;
-
-            fixedWidthSelect.addEventListener('change', function () {
-                if (this.value === 'A4') {
-                    widthInput.value = 794;
-                    heightInput.value = 1123;
-                } else if (this.value === 'Letter') {
-                    widthInput.value = 816;
-                    heightInput.value = 1056;
-                } else if (this.value === 'Good') {
-                    widthInput.value = '';
-                    heightInput.value = '';
-                }
-            });
-
-            const applyBtn = document.createElement('button');
-            applyBtn.textContent = 'Apply';
-            applyBtn.style.background = 'linear-gradient(90deg, #712cca 0%, #a259e6 100%)';
-            applyBtn.style.color = '#fff';
-            applyBtn.style.border = 'none';
-            applyBtn.style.borderRadius = '18px';
-            applyBtn.style.padding = '8px 24px';
-            applyBtn.style.cursor = 'pointer';
-            applyBtn.style.fontWeight = '600';
-            applyBtn.style.fontSize = '1em';
-
-            applyBtn.addEventListener('click', function () {
-                const editorCanvas = document.querySelector('.editor-canvas');
-                if (fixedWidthSelect.value === 'Good') {
-                    editorCanvas.style.maxWidth = '100%';
-                    editorCanvas.style.width = '100%';
-                    editorCanvas.style.height = '';
-                    editorCanvas.style.aspectRatio = '';
-                } else {
-                    if (widthInput.value) editorCanvas.style.maxWidth = widthInput.value + 'px';
-                    if (heightInput.value) editorCanvas.style.minHeight = heightInput.value + 'px';
-                    editorCanvas.style.width = '';
-                    editorCanvas.style.aspectRatio = '';
-                }
-                resizeModal.style.display = 'none';
-            });
-
-            modalContent.appendChild(closeBtn);
-            modalContent.appendChild(label);
-            modalContent.appendChild(widthInput);
-            modalContent.appendChild(heightInput);
-            modalContent.appendChild(fixedWidthSelect);
-            modalContent.appendChild(applyBtn);
-            resizeModal.appendChild(modalContent);
-            document.body.appendChild(resizeModal);
-        }
+/* --- RESIZE PAGE FUNCTIONALITY --- */
+document.querySelector('.dropdown-file .item#resize').addEventListener('click', function () {
+    openResizeModal();
+});
+function openResizeModal() {
+    let resizeModal = document.getElementById('resize-modal');
+    if (!resizeModal) {
+        resizeModal = document.createElement('div');
+        resizeModal.id = 'resize-modal';
+        resizeModal.style.position = 'fixed';
+        resizeModal.style.top = '0';
+        resizeModal.style.left = '0';
+        resizeModal.style.width = '100vw';
+        resizeModal.style.height = '100vh';
+        resizeModal.style.background = 'rgba(0,0,0,0.15)';
         resizeModal.style.display = 'flex';
-    }
+        resizeModal.style.alignItems = 'center';
+        resizeModal.style.justifyContent = 'center';
+        resizeModal.style.zIndex = '3000';
 
+        const modalContent = document.createElement('div');
+        modalContent.style.background = '#fff';
+        modalContent.style.borderRadius = '18px';
+        modalContent.style.boxShadow = '0 8px 32px rgba(113,44,202,0.18)';
+        modalContent.style.padding = '28px 24px 20px 24px';
+        modalContent.style.display = 'flex';
+        modalContent.style.flexDirection = 'column';
+        modalContent.style.alignItems = 'center';
+        modalContent.style.position = 'relative';
+        modalContent.style.minWidth = '320px';
+
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'material-symbols-outlined';
+        closeBtn.textContent = 'close';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '12px';
+        closeBtn.style.right = '16px';
+        closeBtn.style.fontSize = '2em';
+        closeBtn.style.color = '#a259e6';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.addEventListener('click', () => resizeModal.style.display = 'none');
+
+        const label = document.createElement('label');
+        label.textContent = 'Resize Page';
+        label.style.marginBottom = '18px';
+        label.style.fontWeight = '600';
+        label.style.color = '#712cca';
+        label.style.fontSize = '1.1em';
+
+        // Dropdown for mode
+        const modeSelect = document.createElement('select');
+        modeSelect.style.marginBottom = '14px';
+        modeSelect.style.padding = '8px 12px';
+        modeSelect.style.borderRadius = '8px';
+        modeSelect.style.border = '1.5px solid #ece6f7';
+        modeSelect.style.fontSize = '1em';
+        modeSelect.innerHTML = `
+            <option value="fixed">Fixed Width</option>
+            <option value="good">Good Width (Responsive)</option>
+        `;
+
+        // Fixed width inputs
+        const fixedDiv = document.createElement('div');
+        fixedDiv.style.display = 'flex';
+        fixedDiv.style.gap = '10px';
+        fixedDiv.style.marginBottom = '12px';
+        const widthInput = document.createElement('input');
+        widthInput.type = 'number';
+        widthInput.placeholder = 'Width (px)';
+        widthInput.value = '794';
+        widthInput.min = '100';
+        widthInput.style.width = '90px';
+        widthInput.style.padding = '8px 12px';
+        widthInput.style.borderRadius = '8px';
+        widthInput.style.border = '1.5px solid #ece6f7';
+        widthInput.style.fontSize = '1em';
+        const heightInput = document.createElement('input');
+        heightInput.type = 'number';
+        heightInput.placeholder = 'Height (px)';
+        heightInput.value = '1123';
+        heightInput.min = '100';
+        heightInput.style.width = '90px';
+        heightInput.style.padding = '8px 12px';
+        heightInput.style.borderRadius = '8px';
+        heightInput.style.border = '1.5px solid #ece6f7';
+        heightInput.style.fontSize = '1em';
+        fixedDiv.appendChild(widthInput);
+        fixedDiv.appendChild(heightInput);
+
+        // Good width input
+        const goodDiv = document.createElement('div');
+        goodDiv.style.display = 'none';
+        goodDiv.style.marginBottom = '12px';
+        const maxWidthInput = document.createElement('input');
+        maxWidthInput.type = 'number';
+        maxWidthInput.placeholder = 'Max Width (px)';
+        maxWidthInput.value = '900';
+        maxWidthInput.min = '100';
+        maxWidthInput.style.width = '120px';
+        maxWidthInput.style.padding = '8px 12px';
+        maxWidthInput.style.borderRadius = '8px';
+        maxWidthInput.style.border = '1.5px solid #ece6f7';
+        maxWidthInput.style.fontSize = '1em';
+        goodDiv.appendChild(maxWidthInput);
+
+        // Apply button
+        const applyBtn = document.createElement('button');
+        applyBtn.textContent = 'Apply';
+        applyBtn.style.background = 'linear-gradient(90deg, #712cca 0%, #a259e6 100%)';
+        applyBtn.style.color = '#fff';
+        applyBtn.style.border = 'none';
+        applyBtn.style.borderRadius = '18px';
+        applyBtn.style.padding = '8px 24px';
+        applyBtn.style.cursor = 'pointer';
+        applyBtn.style.fontWeight = '600';
+        applyBtn.style.fontSize = '1em';
+
+        // Mode change logic
+        modeSelect.addEventListener('change', function () {
+            if (modeSelect.value === 'fixed') {
+                fixedDiv.style.display = 'flex';
+                goodDiv.style.display = 'none';
+            } else {
+                fixedDiv.style.display = 'none';
+                goodDiv.style.display = 'block';
+            }
+        });
+
+        applyBtn.addEventListener('click', function () {
+            const editorCanvas = document.querySelector('.editor-canvas');
+            const idx = sessionStorage.getItem('currentDocIndex');
+            const docs = JSON.parse(localStorage.getItem('docs') || '[]');
+            if (modeSelect.value === 'fixed') {
+                const w = parseInt(widthInput.value, 10);
+                const h = parseInt(heightInput.value, 10);
+                if (!w || !h) {
+                    showToast('Enter valid width and height.');
+                    return;
+                }
+                editorCanvas.style.maxWidth = w + 'px';
+                editorCanvas.style.minHeight = h + 'px';
+                editorCanvas.style.width = w + 'px';
+                editorCanvas.style.height = h + 'px';
+                editorCanvas.style.aspectRatio = '';
+                // Save to doc
+                if (idx !== null && docs[idx]) {
+                    docs[idx].resizeMode = 'fixed';
+                    docs[idx].width = w;
+                    docs[idx].height = h;
+                    docs[idx].maxWidth = null;
+                    localStorage.setItem('docs', JSON.stringify(docs));
+                }
+            } else {
+                const mw = parseInt(maxWidthInput.value, 10);
+                if (!mw) {
+                    showToast('Enter valid max width.');
+                    return;
+                }
+                editorCanvas.style.maxWidth = mw + 'px';
+                editorCanvas.style.width = '';
+                editorCanvas.style.height = '';
+                editorCanvas.style.minHeight = '';
+                editorCanvas.style.aspectRatio = '';
+                // Save to doc
+                if (idx !== null && docs[idx]) {
+                    docs[idx].resizeMode = 'good';
+                    docs[idx].maxWidth = mw;
+                    docs[idx].width = null;
+                    docs[idx].height = null;
+                    localStorage.setItem('docs', JSON.stringify(docs));
+                }
+            }
+            resizeModal.style.display = 'none';
+            showToast('Page resized!');
+        });
+
+        modalContent.appendChild(closeBtn);
+        modalContent.appendChild(label);
+        modalContent.appendChild(modeSelect);
+        modalContent.appendChild(fixedDiv);
+        modalContent.appendChild(goodDiv);
+        modalContent.appendChild(applyBtn);
+        resizeModal.appendChild(modalContent);
+        document.body.appendChild(resizeModal);
+    }
+    // Restore previous settings if available
+    const idx = sessionStorage.getItem('currentDocIndex');
+    const docs = JSON.parse(localStorage.getItem('docs') || '[]');
+    if (idx !== null && docs[idx]) {
+        if (docs[idx].resizeMode === 'fixed') {
+            document.querySelector('#resize-modal select').value = 'fixed';
+            document.querySelector('#resize-modal input[placeholder="Width (px)"]').value = docs[idx].width || '794';
+            document.querySelector('#resize-modal input[placeholder="Height (px)"]').value = docs[idx].height || '1123';
+            document.querySelector('#resize-modal div:nth-child(4)').style.display = 'flex';
+            document.querySelector('#resize-modal div:nth-child(5)').style.display = 'none';
+        } else if (docs[idx].resizeMode === 'good') {
+            document.querySelector('#resize-modal select').value = 'good';
+            document.querySelector('#resize-modal input[placeholder="Max Width (px)"]').value = docs[idx].maxWidth || '900';
+            document.querySelector('#resize-modal div:nth-child(4)').style.display = 'none';
+            document.querySelector('#resize-modal div:nth-child(5)').style.display = 'block';
+        }
+    }
+    resizeModal.style.display = 'flex';
+}
+
+// Restore resize settings on editor load
+function restoreResizeSettings() {
+    const idx = sessionStorage.getItem('currentDocIndex');
+    const docs = JSON.parse(localStorage.getItem('docs') || '[]');
+    const editorCanvas = document.querySelector('.editor-canvas');
+    if (idx !== null && docs[idx]) {
+        if (docs[idx].resizeMode === 'fixed') {
+            editorCanvas.style.maxWidth = docs[idx].width + 'px';
+            editorCanvas.style.minHeight = docs[idx].height + 'px';
+            editorCanvas.style.width = docs[idx].width + 'px';
+            editorCanvas.style.height = docs[idx].height + 'px';
+            editorCanvas.style.aspectRatio = '';
+        } else if (docs[idx].resizeMode === 'good') {
+            editorCanvas.style.maxWidth = docs[idx].maxWidth + 'px';
+            editorCanvas.style.width = '';
+            editorCanvas.style.height = '';
+            editorCanvas.style.minHeight = '';
+            editorCanvas.style.aspectRatio = '';
+        } else {
+            // Default
+            editorCanvas.style.maxWidth = '794px';
+            editorCanvas.style.minHeight = '1123px';
+            editorCanvas.style.width = '';
+            editorCanvas.style.height = '';
+            editorCanvas.style.aspectRatio = '210/297';
+        }
+    }
+}
+const origShowEditorResize = window.showEditor;
+window.showEditor = function(idx) {
+    origShowEditorResize(idx);
+    restoreResizeSettings();
+};
+document.addEventListener('DOMContentLoaded', function() {
+    if (!document.querySelector('.editor').hidden) {
+        restoreResizeSettings();
+    }
+});
     /* --- DETAILS FUNCTIONALITY --- */
     document.querySelectorAll('.dropdown-file .item#details, .more-options .item#details').forEach(btn => {
         btn.addEventListener('click', function () {
